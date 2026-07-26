@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Participants{% endblock %}
+{% block content %}
+<a href="{{ url_for('trek_detail', trek_id=trek.id) }}" class="btn btn-sm btn-outline-secondary mb-3">&laquo; Back to Trek</a>
+
+<h3 class="mb-4">Participants — {{ trek.name }}</h3>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr><th>Booking ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Booking Date</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            {% for b in bookings %}
+            <tr>
+                <td>{{ b.id }}</td>
+                <td>{{ b.user.name }}</td>
+                <td>{{ b.user.email }}</td>
+                <td>{{ b.user.contact or '—' }}</td>
+                <td>{{ b.booking_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    {% if b.status == 'Booked' %}<span class="badge bg-success">Booked</span>
+                    {% elif b.status == 'Cancelled' %}<span class="badge bg-danger">Cancelled</span>
+                    {% else %}<span class="badge bg-secondary">Completed</span>{% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted">No participants registered yet.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

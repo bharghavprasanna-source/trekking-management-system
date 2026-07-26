@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Manage Staff{% endblock %}
+{% block content %}
+<h3 class="mb-4">Manage Trek Staff</h3>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Search by name or email" value="{{ q }}">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Status</th><th>Assigned Treks</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in staff %}
+            <tr>
+                <td>{{ s.id }}</td>
+                <td>{{ s.name }}</td>
+                <td>{{ s.email }}</td>
+                <td>{{ s.contact or '—' }}</td>
+                <td>
+                    {% if s.status == 'approved' %}<span class="badge bg-success">Approved</span>
+                    {% elif s.status == 'pending' %}<span class="badge bg-warning text-dark">Pending</span>
+                    {% else %}<span class="badge bg-danger">Blacklisted</span>{% endif %}
+                </td>
+                <td>{{ s.treks_assigned|length }}</td>
+                <td>
+                    {% if s.status == 'pending' %}
+                        <a href="{{ url_for('approve_staff', user_id=s.id) }}" class="btn btn-sm btn-success">Approve</a>
+                        <a href="{{ url_for('blacklist_staff', user_id=s.id) }}" class="btn btn-sm btn-danger">Reject</a>
+                    {% elif s.status == 'approved' %}
+                        <a href="{{ url_for('blacklist_staff', user_id=s.id) }}" class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Blacklist this staff member?');">Blacklist</a>
+                    {% else %}
+                        <a href="{{ url_for('unblacklist_staff', user_id=s.id) }}" class="btn btn-sm btn-outline-success">Reinstate</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted">No staff found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

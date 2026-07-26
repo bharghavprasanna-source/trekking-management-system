@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Admin Dashboard</h3>
+
+{% if pending_staff > 0 %}
+<div class="alert alert-warning">
+    You have <strong>{{ pending_staff }}</strong> staff registration(s) awaiting approval.
+    <a href="{{ url_for('manage_staffs') }}">Review now &raquo;</a>
+</div>
+{% endif %}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-success shadow-sm">
+            <div class="card-body">
+                <h6>Total Treks</h6>
+                <h2>{{ total_treks }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body">
+                <h6>Total Users</h6>
+                <h2>{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info shadow-sm">
+            <div class="card-body">
+                <h6>Total Staff</h6>
+                <h2>{{ total_staff }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-dark shadow-sm">
+            <div class="card-body">
+                <h6>Total Bookings</h6>
+                <h2>{{ total_bookings }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <a href="{{ url_for('manage_treks') }}" class="btn btn-outline-success w-100 py-3">Manage Treks</a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('manage_staffs') }}" class="btn btn-outline-primary w-100 py-3">Manage Staff</a>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('manage_users') }}" class="btn btn-outline-dark w-100 py-3">Manage Users</a>
+    </div>
+</div>
+{% endblock %}

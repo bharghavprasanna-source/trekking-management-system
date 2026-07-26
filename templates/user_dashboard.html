@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h3 class="mb-4">Welcome, {{ current_user.name }}</h3>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card text-white bg-success shadow-sm">
+            <div class="card-body">
+                <h6>Available Treks</h6>
+                <h2>{{ available_treks }}</h2>
+                <a href="{{ url_for('browse_treks') }}" class="text-white">Browse now &raquo;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body">
+                <h6>My Active Bookings</h6>
+                <h2>{{ my_bookings|length }}</h2>
+                <a href="{{ url_for('my_bookings') }}" class="text-white">View bookings &raquo;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5>Treck Status</h5>
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead class="table-dark">
+            <tr><th>Trek</th><th>Booking Date</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            {% for b in recent %}
+            <tr>
+                <td>{{ b.trek.name }}</td>
+                <td>{{ b.booking_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td>
+                    {% if b.status == 'Booked' %}<span class="badge bg-success">Booked</span>
+                    {% elif b.status == 'Cancelled' %}<span class="badge bg-danger">Cancelled</span>
+                    {% else %}<span class="badge bg-secondary">Completed</span>{% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="3" class="text-center text-muted">No bookings yet. Start by browsing treks!</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block content %}
+<h3 class="mb-4">Manage Users (Trekkers)</h3>
+
+<form method="GET" class="row g-2 mb-3">
+    <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Search by name or email" value="{{ q }}">
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Name</th><th>Email</th><th>Contact</th><th>Status</th><th>Bookings</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.contact or '—' }}</td>
+                <td>
+                    {% if u.status == 'approved' %}<span class="badge bg-success">Active</span>
+                    {% else %}<span class="badge bg-danger">Blacklisted</span>{% endif %}
+                </td>
+                <td>{{ u.bookings|length }}</td>
+                <td>
+                    {% if u.status == 'approved' %}
+                        <a href="{{ url_for('blacklist_user', user_id=u.id) }}" class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Blacklist this user?');">Blacklist</a>
+                    {% else %}
+                        <a href="{{ url_for('unblacklist_user', user_id=u.id) }}" class="btn btn-sm btn-outline-success">Reinstate</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="text-center text-muted">No users found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

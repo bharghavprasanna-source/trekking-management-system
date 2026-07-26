@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ trek.name }}{% endblock %}
+{% block content %}
+<a href="{{ url_for('staff_dashboard') }}" class="btn btn-sm btn-outline-secondary mb-3">&laquo; Back to Dashboard</a>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h3>{{ trek.name }}</h3>
+        <p class="text-muted mb-1">{{ trek.location }} &middot; {{ trek.difficulty }} &middot; {{ trek.duration }} days</p>
+        <p class="text-muted">{{ trek.start_date }} to {{ trek.end_date }}</p>
+
+        <div class="row mb-3">
+            <div class="col-md-4"><strong>Total Slots:</strong> {{ trek.total_slots }}</div>
+            <div class="col-md-4"><strong>Booked:</strong> {{ booked_count }}</div>
+            <div class="col-md-4"><strong>Current Status:</strong> <span class="badge bg-secondary">{{ trek.status }}</span></div>
+        </div>
+
+        <hr>
+        <h5>Update Trek</h5>
+        <form method="POST">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Available Slots</label>
+                    <input type="number" name="available_slots" min="0" max="{{ trek.total_slots }}"
+                           class="form-control" value="{{ trek.available_slots }}">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Trek Status</label>
+                    <select name="status" class="form-select">
+                        {% for s in ['Open', 'Closed', 'Completed'] %}
+                        <option value="{{ s }}" {% if trek.status == s %}selected{% endif %}>{{ s }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Save Changes</button>
+        </form>
+
+        <hr>
+        <a href="{{ url_for('participants', trek_id=trek.id) }}" class="btn btn-outline-primary">View Participant List</a>
+    </div>
+</div>
+{% endblock %}
